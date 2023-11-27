@@ -166,6 +166,10 @@ Route::get('account_benefits', [HomeController::class, 'accountBenefits']);
 
 
 
+Route::get('rfq', [HomeController::class, 'rfq']);
+
+
+
 Route::post('add/support', [SupportController::class, 'addSupport'])->name('add.support');
 
 
@@ -185,6 +189,7 @@ Route::put('upload/work-order/{id}', [RFQController::class,'workOrderUpload'])->
 
 //Proof of Payment Upload
 Route::put('upload/payment-proof/{id}', [RFQController::class,'proofPaymentUpload'])->name('payment-proof.upload');
+
 
 // card route start -----------
  //Route::get('cart', [CartController::class, 'cart'])->name('cart');

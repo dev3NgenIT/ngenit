@@ -62,6 +62,11 @@ class HomeController extends Controller
         return view('frontend.auth.register');
     }
 
+    public function rfq()
+    {
+        return view('frontend.pages.rfq.rfq');
+    }
+
 
 
     //Homepage
