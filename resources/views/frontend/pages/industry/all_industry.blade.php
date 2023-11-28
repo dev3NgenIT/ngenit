@@ -324,7 +324,7 @@
                 <!-- home title -->
                 <div class="home_title mt-5">
                     <div class="software_feature_title">
-                        <h1 class="text-center my-3">Related Contents</h1>
+                        <h1 class="text-center my-3" >Related Contents</h1>
                     </div>
                     <p class="home_title_text mb-5">See how Ngen It has helped organizations of all sizes across every
                         industry
@@ -351,17 +351,17 @@
                                 aria-labelledby="nav-home-tab">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h5>{{ $story1->badge }} </h5>
+                                        <h5 class="py-2">{{ $story1->badge }}</h5>
                                         <h4>{{ $story1->title }}</h4>
                                         <div style="text-align: justify">
                                             <p class="mb-1">{{ $story1->header }}</p>
-                                            <p>{!! Str::limit($story1->short_des, 200) !!}......</p>
+                                            <p>{!! Str::limit(strip_tags($story1->short_des), 200) !!}</p>
                                         </div>
                                         <a href="" class="common_button2">Read Details</a>
                                     </div>
                                     <div class="col-lg-6">
                                         <div>
-                                            <img class="img-fluid" src="{{ asset('storage/' . $story1->image) }}" alt="Picture">
+                                            <img class=""  width="100%" height="330px" src="{{ asset('storage/' . $story1->image) }}" alt="Picture">
                                         </div>
                                     </div>
                                 </div>
@@ -373,13 +373,13 @@
                                         <h4>{{ $story2->title }}</h4>
                                         <div style="text-align: justify">
                                             <p class="mb-1">{{ $story2->header }}</p>
-                                            <p>{!! Str::limit($story2->short_des, 200) !!}......</p>
+                                            <p>{!! Str::limit(strip_tags($story2->short_des), 200) !!}</p>
                                         </div>
                                         <a href="" class="common_button2">Read Details</a>
                                     </div>
                                     <div class="col-lg-6">
                                         <div>
-                                            <img class="img-fluid" src="{{ asset('storage/' . $story2->image) }}" alt="Picture">
+                                            <img class=""  width="100%" height="330px" src="{{ asset('storage/' . $story2->image) }}" alt="Picture">
                                         </div>
                                     </div>
                                 </div>
@@ -392,13 +392,13 @@
                                         <h4>{{ $story3->title }}</h4>
                                         <div style="text-align: justify">
                                             <p class="mb-1">{{ $story3->header }}</p>
-                                            <p>{!! Str::limit($story3->short_des, 200) !!}......</p>
+                                            <p>{!! Str::limit(strip_tags($story3->short_des), 200) !!}</p>
                                         </div>
                                         <a href="" class="common_button2">Read Details</a>
                                     </div>
                                     <div class="col-lg-6">
                                         <div>
-                                            <img class="img-fluid" src="{{ asset('storage/' . $story3->image) }}" alt="Picture">
+                                            <img class=""  width="100%" height="330px" src="{{ asset('storage/' . $story3->image) }}" alt="Picture">
                                         </div>
                                     </div>
                                 </div>
@@ -410,13 +410,13 @@
                                         <h4>{{ $story4->title }}</h4>
                                         <div style="text-align: justify">
                                             <p class="mb-1">{{ $story4->header }}</p>
-                                            <p>{!! Str::limit($story4->short_des, 200) !!}......</p>
+                                            <p>{!! Str::limit(strip_tags($story4->short_des), 200) !!}</p>
                                         </div>
                                         <a href="" class="common_button2">Read Details</a>
                                     </div>
                                     <div class="col-lg-6">
                                         <div>
-                                            <img class="img-fluid" src="{{ asset('storage/' . $story4->image) }}" alt="Picture">
+                                            <img class=""  width="100%" height="330px" src="{{ asset('storage/' . $story4->image) }}" alt="Picture">
                                         </div>
                                     </div>
                                 </div>
@@ -581,3 +581,13 @@
     <!---------End -------->
 
 @endsection
+@push('scritps')
+<script>
+    $(document).ready(function(){
+        $('#nav-tab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+</script>
+@endpush

@@ -46,6 +46,7 @@ use App\Models\Admin\PortfolioClientFeedback;
 use App\Models\Admin\PortfolioDetails;
 use App\Models\Site;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -758,73 +759,75 @@ class HomeController extends Controller
 
 
 
-    //Industry All Page
-
     public function AllIndustry()
     {
-
-        $data = [];
-
-        $data['learnmore'] = LearnMore::orderBy('id', 'DESC')->select('learn_mores.industry_header', 'learn_mores.consult_title', 'learn_mores.consult_short_des', 'learn_mores.background_image')->first();
-        $data['industrys'] = Industry::orderBy('id', 'ASC')->limit(8)->get(['id','slug','logo','title']);
-        $data['random_industries'] = Industry::orderBy('id', 'DESC')->limit(4)->get(['id','slug','title']);
-
-        // Use cached results for 'story3' and 'story4' as they are random client stories
-        $randomClientStories = ClientStory::inRandomOrder()->limit(2)->get();
-        $data['story3'] = $randomClientStories->first();
-        $data['story4'] = $randomClientStories->last();
-
-        // Use cached results for 'story1' and 'story2' as they are random blog posts
-        $randomBlogPosts = Blog::inRandomOrder()->limit(2)->get();
-        $data['story1'] = $randomBlogPosts->first();
-        $data['story2'] = $randomBlogPosts->last();
-
-        // Use cached result for 'techglossy' as it is a random TechGlossy entry
-        $data['techglossy'] = TechGlossy::inRandomOrder()->first();
-
-        // Use cached results for 'tech_datas' as they are technology data with a specific category
-        $techDatas = TechnologyData::where('category', 'industry')->orderBy('id', 'ASC')->get();
-        $data['tech_datas'] = $techDatas;
-        return view('frontend.pages.industry.all_industry', $data);
-    }
-
-    public function IndustryDetails($id)
-    {
-        $data['industry'] = Industry::where('slug', $id)->with(['industryPage.rowOne','industryPage.rowThree','industryPage.rowFive','industryPage.solutionCardOne','industryPage.solutionCardTwo','industryPage.solutionCardThree','industryPage.solutionCardFour',])->first();
-
-        if (isset($data['industry']->industryPage)) {
-            if (!empty($data['industry']->industryPage)) {
-                $data['storys'] = Blog::inRandomOrder()
-                    ->whereJsonContains('industry_id', $data['industry']->id)
-                    ->limit(4)
-                    ->get();
-
-                $data['techglossy'] = Techglossy::whereJsonContains('industry_id', $data['industry']->id)->first();
-
-                $data['solutions'] = SolutionDetail::where('industry_id', $data['industry']->id)->get();
-
-                $data['product_ids'] = MultiIndustry::where('industry_id', $data['industry']->id)->pluck('product_id');
-
-                $data['products'] = Product::whereIn('id', $data['product_ids'])
-                    ->limit(16)
-                    ->get(['id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'price_status', 'brand_id']);
-            }
-
-
-
-            return view('frontend.pages.industry.industry_details', $data);
-        } else {
-            Toastr::error('No Details information found for this Industry.');
-            return redirect()->back();
+        try {
+            $data = [];
+            
+            $data['learnmore'] = LearnMore::orderBy('id', 'DESC')->select('learn_mores.industry_header', 'learn_mores.consult_title', 'learn_mores.consult_short_des', 'learn_mores.background_image')->first();
+            $data['industrys'] = Industry::orderBy('id', 'ASC')->limit(8)->get(['id','slug','logo','title']);
+            $data['random_industries'] = Industry::orderBy('id', 'DESC')->limit(4)->get(['id','slug','title']);
+    
+            // Use cached results for 'story3' and 'story4' as they are random client stories
+            $randomClientStories = ClientStory::inRandomOrder()->limit(2)->get();
+            $data['story3'] = $randomClientStories->first();
+            $data['story4'] = $randomClientStories->last();
+    
+            // Use cached results for 'story1' and 'story2' as they are random blog posts
+            $randomBlogPosts = Blog::inRandomOrder()->limit(2)->get();
+            $data['story1'] = $randomBlogPosts->first();
+            $data['story2'] = $randomBlogPosts->last();
+    
+            // Use cached result for 'techglossy' as it is a random TechGlossy entry
+            $data['techglossy'] = TechGlossy::inRandomOrder()->first();
+    
+            // Use cached results for 'tech_datas' as they are technology data with a specific category
+            $techDatas = TechnologyData::where('category', 'industry')->orderBy('id', 'ASC')->get();
+            $data['tech_datas'] = $techDatas;
+    
+            return view('frontend.pages.industry.all_industry', $data);
+        } catch (\Exception $e) {
+            Log::error('AllIndustry Exception: ' . $e->getMessage());
+            // You can redirect with an error message or handle the exception as needed
+            // For example: return redirect()->route('some.error.route')->with('error', 'An error occurred.');
         }
     }
-
-
-
-
-
-
-
+    
+    public function IndustryDetails($id)
+    {
+        try {
+            $data['industry'] = Industry::where('slug', $id)->with(['industryPage.rowOne','industryPage.rowThree','industryPage.rowFive','industryPage.solutionCardOne','industryPage.solutionCardTwo','industryPage.solutionCardThree','industryPage.solutionCardFour',])->first();
+    
+            if (isset($data['industry']->industryPage)) {
+                if (!empty($data['industry']->industryPage)) {
+                    $data['storys'] = Blog::inRandomOrder()
+                        ->whereJsonContains('industry_id', $data['industry']->id)
+                        ->limit(4)
+                        ->get();
+    
+                    $data['techglossy'] = Techglossy::whereJsonContains('industry_id', $data['industry']->id)->first();
+    
+                    $data['solutions'] = SolutionDetail::where('industry_id', $data['industry']->id)->get();
+    
+                    $data['product_ids'] = MultiIndustry::where('industry_id', $data['industry']->id)->pluck('product_id');
+    
+                    $data['products'] = Product::whereIn('id', $data['product_ids'])
+                        ->limit(16)
+                        ->get(['id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'price_status', 'brand_id']);
+                }
+    
+                return view('frontend.pages.industry.industry_details', $data);
+            } else {
+                Log::error('No Details information found for this Industry.');
+                // You can redirect with an error message or handle the absence of details as needed
+                // For example: return redirect()->route('some.error.route')->with('error', 'No Details information found for this Industry.');
+            }
+        } catch (\Exception $e) {
+            Log::error('IndustryDetails Exception: ' . $e->getMessage());
+            // You can redirect with an error message or handle the exception as needed
+            // For example: return redirect()->route('some.error.route')->with('error', 'An error occurred.');
+        }
+    }
 
 
 
